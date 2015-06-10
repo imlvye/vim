@@ -1,0 +1,136 @@
+个人VIM配置
+
+1、pathogen 插件管理插件
+	https://github.com/tpope/vim-pathogen
+	在.vim文件夹下建立autoload和bundle目录
+	从下载地址 获取pathogen.vim文件，将其复制到autoload目录下
+	在.vimrc文件中增加如下代码：
+	call pathogen#infect()
+
+2、NERDTree 文件浏览插件
+	https://github.com/scrooloose/nerdtree
+	进入.vim/bundle目录
+	执行git clone git://github.com/scrooloose/nerdtree.git
+	下载完成后，在bundle下会多出一个nerdtree的文件夹，所有相关插件都在该文件夹下
+	在Vim中运行:Helptags来生成NERDTree的在线帮助tags
+	打开Vim，输入:NERDTree即可启动，亦可在.vimrc里面绑定启动快捷键F5
+	nnoremap <silent> <F5> :NERDTree<CR>
+	NERDTree常用的快捷键：
+		和编辑文件一样，通过h j k l移动光标定位
+		o 打开关闭文件或者目录，如果是文件的话，光标出现在打开的文件中
+		go 效果同上，不过光标保持在文件目录里，类似预览文件内容的功能
+		i和s可以水平分割或纵向分割窗口打开文件，前面加g类似go的功能
+		t 在标签页中打开
+		T 在后台标签页中打开
+		p 到上层目录
+		P 到根目录
+		K 到同目录第一个节点
+		J 到同目录最后一个节点
+		m 显示文件系统菜单（添加、删除、移动操作）
+		? 帮助
+		q 关闭
+
+3、Powerline 状态栏插件
+	进入.vim/bundle目录
+	执行git clone git://github.com/Lokaltog/vim-powerline.git
+	在.vimrc中设置状态栏主题
+	"powerline{
+	set guifont=PowerlineSymbols\ for\ Powerline
+	set nocompatible
+	set t_Co=256
+	let g:Powerline_symbols = 'fancy'
+	"}
+
+4、ctags Linux命令
+	sudo apt-get install ctags
+	
+	在Vim中使用tag
+	vim -t class | method | variable
+	例如，你想打开包含了loadCache方法的文件，可以用如下命令：
+	vim -t loadCache
+	如果多个文件中包含loadCache方法，vim会按照字母顺利打开第一个文件。想查看其他文件，可以使用ts命令， :ts会列出所有包含loadCache标签的文件，输入文件序号可以打开文件并定位到loadCache标签，通过j和k可以上下滚屏。
+
+	如果只是通过vim命令打开文件，那么可以使用如下命令进行文件检索和浏览：
+	:ta tagname 跳转到标签tagname定义的地方
+	:stag tagname 在分割窗口中查看包含tagname的文件
+	:tags 查看到达当前位置所经过的标签路径
+	:ts tagname 列出匹配tagname的标签，如为空，则使用标签栈中最后的标签
+	:tf 跳转至第一个匹配的标签
+	:tl 跳转至最后一个匹配的标签
+
+	跳转快捷键：
+	ctrl-] ：跳转至光标所在对象定义之处
+	ctrl-t ：返回跳转前位置
+
+5、taglist 代码浏览插件
+	显示代码中的包、类、接口、方法、函数、变量、属性等内容，是Vim浏览代码的一个必备工具
+
+	进入~/.vim/bundle目录
+
+	执行： git clone git://github.com/vim-scripts/taglist.vim.git
+
+	在.vimrc文件设置taglist的配置信息，以下是我的偏好设置
+
+	"taglist{
+	let Tlist_Show_One_File = 1            "只显示当前文件的taglist，默认是显示多个
+	let Tlist_Exit_OnlyWindow = 1          "如果taglist是最后一个窗口，则退出vim
+	let Tlist_Use_Right_Window = 1         "在右侧窗口中显示taglist
+	let Tlist_GainFocus_On_ToggleOpen = 1  "打开taglist时，光标保留在taglist窗口
+	let Tlist_Ctags_Cmd='/usr/bin/ctags'  "设置ctags命令的位置
+	nnoremap <leader>tl : Tlist<CR>        "设置关闭和打开taglist窗口的快捷键
+	"}
+	当使用vim打开某个程序文件时，我们可以用:Tlist打开taglist窗口，如果该程序具备类、接口、属性等元素，就会在taglist窗口显示出来。
+	快捷键：
+		通过光标选择tag，回车可以跳到定义该tag的程序位置
+		选中tag时按空格键，会在状态栏下方显示该tag的完整定义
+		x，横向放大或缩小taglist窗口
+		=，折叠所有的tag
+		+，打开所有的tag
+        在.vimrc绑定启动taglist的快捷键：
+	nnoremap <silent><F6> :Tlist<CR>
+
+6、neocomplcache 代码自动补齐插件
+        进入~/.vim/bundle
+	git clone https://github.com/Shougo/neocomplcache.git
+	在.vimrc中配置neocomplcache自启动和tab补齐
+	let g:neocomplcache_enable_at_startup = 1
+	inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+
+7、括弧补齐
+	在.vimrc里面加入：
+    :inoremap ( ()<ESC>i
+    :inoremap { {}<ESC>i
+    :inoremap [ []<ESC>i
+    :inoremap " ""<ESC>i
+    :inoremap ' ''<ESC>i
+
+8、NerdCommenter 注释插件
+        进入~/.vim/bundle
+	git clone https://github.com/scrooloose/nerdcommenter.git
+    使用：
+        在Normal模式或者时VISUAL模式
+        \ca  :在可选的注释方式之间切换，比如C/C++ 的块注释/**/和行注释//
+        \cc  :注释当前行
+        \c<space>   :切换注释/非注释状态
+        \cs   :   以/*
+                     *
+                     */方式注释
+        \cu  取消注释
+        \cA  在当行尾部添加注释
+        \cm  在VISUAL模式选取块后，使用cm进行块注释， 或选取块后使用cu进行反注释
+
+
+9、clang_complete C/C++语法自动补齐工具
+        进入~/.vim/bundle
+	git clone https://github.com/Rip-Rip/clang_complete.git 
+    使用：
+        在.vimrc文件中添加
+        let g:clang_library_path='/usr/lib/llvm-3.4/lib/libclang.so'
+        指出ligclang.so的路径
+    neocomplcache  与此插件不可同时使用
+    
+
+
+	
+
+
